@@ -1,0 +1,197 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ t('appTitle') }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" [attr.aria-label]="t('settings')" (click)="settingsOpen = true">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" [attr.aria-label]="t('clearTranscript')" (click)="clearTranscript()">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="caption-shell" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+    <section class="model-loading" *ngIf="modelLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <div>
+        <h2>{{ t('loadingTitle') }}</h2>
+        <p>{{ t('loadingBody') }}</p>
+      </div>
+    </section>
+
+    <section class="status-band" [class.listening]="status === 'listening'" [class.error]="status === 'error'">
+      <div>
+        <p class="eyebrow">{{ t('eyebrow') }}</p>
+        <h1>{{ statusText() }}</h1>
+      </div>
+      <ion-badge [color]="status === 'listening' ? 'success' : status === 'error' ? 'danger' : 'medium'">
+        {{ statusBadgeText() }}
+      </ion-badge>
+    </section>
+
+    <section class="live-caption" aria-live="polite">
+      <p *ngIf="liveText; else quietState">{{ liveText }}</p>
+      <ng-template #quietState>
+        <p class="muted">{{ t('quiet') }}</p>
+      </ng-template>
+    </section>
+
+    <section class="controls">
+      <ion-button expand="block" size="large" color="primary" *ngIf="status !== 'listening'" (click)="startListening()">
+        <ion-icon slot="start" name="mic-outline"></ion-icon>
+        {{ t('start') }}
+      </ion-button>
+      <ion-button expand="block" size="large" color="danger" *ngIf="status === 'listening'" (click)="stopListening()">
+        <ion-icon slot="start" name="stop-circle-outline"></ion-icon>
+        {{ t('stop') }}
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" (click)="requestNotifications()">
+        <ion-icon slot="start" name="notifications-outline"></ion-icon>
+        {{ t('notifications') }}: {{ notificationPermission === 'unsupported' ? t('unsupported') : notificationPermission }}
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" (click)="settingsOpen = true">
+        <ion-icon slot="start" name="settings-outline"></ion-icon>
+        {{ t('settings') }}
+      </ion-button>
+    </section>
+
+    <section class="settings-panel">
+      <ion-item lines="full">
+        <ion-icon slot="start" name="language-outline"></ion-icon>
+        <ion-select
+          [label]="t('language')"
+          labelPlacement="stacked"
+          interface="popover"
+          [value]="language"
+          (ionChange)="updateLanguageSetting($event.detail.value)">
+          <ion-select-option value="fr">Francais</ion-select-option>
+          <ion-select-option value="ar">العربية</ion-select-option>
+          <ion-select-option value="en">English</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="full">
+        <ion-icon slot="start" name="phone-portrait-outline"></ion-icon>
+        <ion-toggle
+          [checked]="vibrationEnabled"
+          (ionChange)="updateVibrationSetting($event.detail.checked)">
+          {{ t('vibration') }}
+        </ion-toggle>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-icon slot="start" name="options-outline"></ion-icon>
+        <ion-range
+          [label]="t('sensitivity')"
+          labelPlacement="stacked"
+          min="0"
+          max="100"
+          step="5"
+          [value]="microphoneSensitivity"
+          (ionKnobMoveEnd)="updateSensitivitySetting($event.detail.value)">
+          <ion-label slot="start">{{ t('low') }}</ion-label>
+          <ion-label slot="end">{{ t('high') }}</ion-label>
+        </ion-range>
+      </ion-item>
+    </section>
+
+    <ion-item lines="full" class="server-input" *ngIf="!isNative && audioDevices.length">
+      <ion-icon slot="start" name="mic-circle-outline"></ion-icon>
+      <ion-select [label]="t('microphone')" labelPlacement="stacked" interface="popover" [(ngModel)]="selectedAudioDeviceId">
+        <ion-select-option value="">{{ t('defaultMic') }}</ion-select-option>
+        <ion-select-option *ngFor="let device of audioDevices" [value]="device.deviceId">
+          {{ device.label || t('micInput') }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item lines="full" class="server-input" *ngIf="!isNative">
+      <ion-icon slot="start" name="server-outline"></ion-icon>
+      <ion-input [label]="t('asrServer')" labelPlacement="stacked" [(ngModel)]="websocketUrl"></ion-input>
+    </ion-item>
+
+    <ion-note color="medium" *ngIf="isNative">
+      {{ t('nativeNote') }}
+    </ion-note>
+
+    <ion-note color="medium" *ngIf="!isNative && !audioDevices.length">
+      {{ t('browserMicNote') }}
+    </ion-note>
+
+    <ion-note color="danger" *ngIf="errorMessage">{{ errorMessage }}</ion-note>
+
+    <section class="history">
+      <h2>{{ t('recentSpeech') }}</h2>
+      <ion-list *ngIf="transcript.length; else emptyTranscript">
+        <ion-item *ngFor="let item of transcript">
+          <ion-label>{{ item }}</ion-label>
+        </ion-item>
+      </ion-list>
+      <ng-template #emptyTranscript>
+        <p class="muted">{{ t('emptyTranscript') }}</p>
+      </ng-template>
+    </section>
+  </main>
+</ion-content>
+
+<ion-modal [isOpen]="settingsOpen" (didDismiss)="settingsOpen = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ t('settings') }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="settingsOpen = false">{{ t('close') }}</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <section class="settings-modal" [attr.dir]="language === 'ar' ? 'rtl' : 'ltr'">
+        <ion-list lines="full">
+          <ion-item>
+            <ion-icon slot="start" name="language-outline"></ion-icon>
+            <ion-select
+              [label]="t('language')"
+              labelPlacement="stacked"
+              interface="popover"
+              [value]="language"
+              (ionChange)="updateLanguageSetting($event.detail.value)">
+              <ion-select-option value="fr">Francais</ion-select-option>
+              <ion-select-option value="ar">العربية</ion-select-option>
+              <ion-select-option value="en">English</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon slot="start" name="phone-portrait-outline"></ion-icon>
+            <ion-toggle
+              [checked]="vibrationEnabled"
+              (ionChange)="updateVibrationSetting($event.detail.checked)">
+              {{ t('vibration') }}
+            </ion-toggle>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" name="options-outline"></ion-icon>
+            <ion-range
+              [label]="t('sensitivity')"
+              labelPlacement="stacked"
+              min="0"
+              max="100"
+              step="5"
+              [value]="microphoneSensitivity"
+              (ionKnobMoveEnd)="updateSensitivitySetting($event.detail.value)">
+              <ion-label slot="start">{{ t('low') }}</ion-label>
+              <ion-label slot="end">{{ t('high') }}</ion-label>
+            </ion-range>
+          </ion-item>
+        </ion-list>
+      </section>
+    </ion-content>
+  </ng-template>
+</ion-modal>
