@@ -75,8 +75,8 @@
 .live-caption {
   display: grid;
   align-items: center;
-  min-height: 220px;
-  padding: 22px;
+  min-height: 280px;
+  padding: 26px;
   border-radius: 8px;
   color: #111827;
   background: #fffdf7;
@@ -85,11 +85,18 @@
 
 .live-caption p {
   margin: 0;
-  font-size: clamp(1.8rem, 7vw, 3.8rem);
-  line-height: 1.25;
+  font-size: clamp(2.6rem, 11vw, 6rem);
+  line-height: 1.12;
+  font-weight: 800;
   text-align: right;
   direction: auto;
   overflow-wrap: anywhere;
+}
+
+.live-caption p.muted {
+  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .controls {
@@ -127,9 +134,34 @@
   gap: 10px;
 }
 
+.recent-top {
+  padding: 14px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(25, 42, 70, 0.08);
+}
+
 .history h2 {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 800;
+}
+
+.history ion-item {
+  --min-height: 64px;
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+}
+
+.history ion-item.latest-caption {
+  --background: #fff7dd;
+  --min-height: 88px;
+}
+
+.history ion-item.latest-caption ion-label {
+  color: #101828;
+  font-size: clamp(1.8rem, 7vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
 }
 
 ion-list {
@@ -137,10 +169,12 @@ ion-list {
   overflow: hidden;
 }
 
-ion-label {
+.history ion-label {
   white-space: normal;
   text-align: right;
   direction: auto;
+  font-size: 1.2rem;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 

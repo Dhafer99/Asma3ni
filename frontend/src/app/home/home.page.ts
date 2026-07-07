@@ -119,6 +119,43 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
   },
 };
 
+const TUNISIAN_PHRASE_CORRECTIONS: Array<[RegExp, string]> = [
+  [/ما\s+في\s+شيء/g, 'ما فما شي'],
+  [/ما\s+فيش/g, 'ما فماش'],
+  [/ما\s+يوجدش/g, 'ما فماش'],
+  [/لا\s+بأس/g, 'لاباس'],
+  [/إن\s+شاء\s+الله/g, 'ان شاء الله'],
+  [/صباح\s+الخير/g, 'صباح الخير'],
+  [/مساء\s+الخير/g, 'مساء الخير'],
+];
+
+const TUNISIAN_WORD_CORRECTIONS: Record<string, string> = {
+  ماذا: 'شنوة',
+  لماذا: 'علاش',
+  كيف: 'كيفاش',
+  أين: 'وين',
+  الان: 'توا',
+  الآن: 'توا',
+  كثيرا: 'برشا',
+  كثير: 'برشا',
+  جيد: 'باهي',
+  جيدة: 'باهية',
+  نعم: 'اي',
+  سوف: 'باش',
+  سن: 'باش',
+  لأن: 'خاطر',
+  ليس: 'موش',
+  لست: 'موش',
+  لا: 'لا',
+  مرحبا: 'عسلامة',
+  شكرا: 'يعيشك',
+  اريد: 'نحب',
+  أريد: 'نحب',
+  يوجد: 'فما',
+  هنا: 'هوني',
+  هناك: 'غادي',
+};
+
 interface CaptionMessage {
   type: 'ready' | 'partial' | 'final' | 'error';
   text?: string;
@@ -432,14 +469,15 @@ export class HomePage implements OnDestroy {
     if (event.type === 'partial') {
       this.status = 'listening';
       this.modelLoading = false;
-      this.liveText = event.text ?? '';
+      this.liveText = this.correctTunisianText(event.text ?? '');
       return;
     }
 
     if (event.type === 'final' && event.text) {
+      const text = this.correctTunisianText(event.text);
       this.status = 'listening';
       this.modelLoading = false;
-      this.transcript = [event.text, ...this.transcript].slice(0, 20);
+      this.transcript = [text, ...this.transcript].slice(0, 20);
       this.liveText = '';
       return;
     }
@@ -467,20 +505,40 @@ export class HomePage implements OnDestroy {
 
   private handleCaptionMessage(message: CaptionMessage): void {
     if (message.type === 'partial') {
-      this.liveText = message.text ?? '';
+      this.liveText = this.correctTunisianText(message.text ?? '');
       return;
     }
 
     if (message.type === 'final' && message.text) {
-      this.transcript = [message.text, ...this.transcript].slice(0, 20);
+      const text = this.correctTunisianText(message.text);
+      this.transcript = [text, ...this.transcript].slice(0, 20);
       this.liveText = '';
-      this.notify(message.text);
+      this.notify(text);
       return;
     }
 
     if (message.type === 'error') {
       this.fail(message.message ?? 'The ASR server returned an error.');
     }
+  }
+
+  private correctTunisianText(text: string): string {
+    const compact = text.replace(/\s+/g, ' ').trim();
+    if (!compact) {
+      return '';
+    }
+
+    let corrected = compact;
+    for (const [pattern, replacement] of TUNISIAN_PHRASE_CORRECTIONS) {
+      corrected = corrected.replace(pattern, replacement);
+    }
+
+    return corrected
+      .split(/([\s،,.!?؟]+)/)
+      .map((part) => TUNISIAN_WORD_CORRECTIONS[part] ?? part)
+      .join('')
+      .replace(/\s+([،,.!?؟])/g, '$1')
+      .trim();
   }
 
   private notify(text: string): void {

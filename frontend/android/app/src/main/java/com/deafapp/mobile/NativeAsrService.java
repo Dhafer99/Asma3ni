@@ -116,13 +116,18 @@ public class NativeAsrService extends Service implements RecognitionListener {
     @Override
     public void onPartialResult(String hypothesis) {
         String text = extractText(hypothesis, "partial");
-        if (text.isEmpty() || text.equals(lastPartial) || !passesSensitivityGate(hypothesis, "partial_result", false)) {
+        if (text.isEmpty() || !passesSensitivityGate(hypothesis, "partial_result", false)) {
             return;
         }
 
-        lastPartial = text;
-        broadcast("partial", text, "");
-        updateNotification(text);
+        String correctedText = correctTunisianText(text);
+        if (correctedText.equals(lastPartial)) {
+            return;
+        }
+
+        lastPartial = correctedText;
+        broadcast("partial", correctedText, "");
+        updateNotification(correctedText);
     }
 
     @Override
@@ -132,9 +137,10 @@ public class NativeAsrService extends Service implements RecognitionListener {
             return;
         }
 
+        String correctedText = correctTunisianText(text);
         lastPartial = "";
-        broadcast("final", text, "");
-        updateNotification(text);
+        broadcast("final", correctedText, "");
+        updateNotification(correctedText);
         vibrateForCaption();
     }
 
@@ -197,6 +203,79 @@ public class NativeAsrService extends Service implements RecognitionListener {
             return new JSONObject(json).optString(key, "").trim();
         } catch (Exception ignored) {
             return "";
+        }
+    }
+
+    private String correctTunisianText(String text) {
+        String corrected = text == null ? "" : text.replaceAll("\\s+", " ").trim();
+        if (corrected.isEmpty()) {
+            return "";
+        }
+
+        corrected = corrected
+            .replace("ما في شيء", "ما فما شي")
+            .replace("ما فيش", "ما فماش")
+            .replace("ما يوجدش", "ما فماش")
+            .replace("لا بأس", "لاباس")
+            .replace("إن شاء الله", "ان شاء الله");
+
+        StringBuilder result = new StringBuilder();
+        String[] parts = corrected.split("(?<=[\\s،,.!?؟])|(?=[\\s،,.!?؟])");
+        for (String part : parts) {
+            result.append(correctTunisianWord(part));
+        }
+
+        return result
+            .toString()
+            .replaceAll("\\s+([،,.!?؟])", "$1")
+            .trim();
+    }
+
+    private String correctTunisianWord(String word) {
+        switch (word) {
+            case "ماذا":
+                return "شنوة";
+            case "لماذا":
+                return "علاش";
+            case "كيف":
+                return "كيفاش";
+            case "أين":
+                return "وين";
+            case "الان":
+            case "الآن":
+                return "توا";
+            case "كثيرا":
+            case "كثير":
+                return "برشا";
+            case "جيد":
+                return "باهي";
+            case "جيدة":
+                return "باهية";
+            case "نعم":
+                return "اي";
+            case "سوف":
+            case "سن":
+                return "باش";
+            case "لأن":
+                return "خاطر";
+            case "ليس":
+            case "لست":
+                return "موش";
+            case "مرحبا":
+                return "عسلامة";
+            case "شكرا":
+                return "يعيشك";
+            case "اريد":
+            case "أريد":
+                return "نحب";
+            case "يوجد":
+                return "فما";
+            case "هنا":
+                return "هوني";
+            case "هناك":
+                return "غادي";
+            default:
+                return word;
         }
     }
 

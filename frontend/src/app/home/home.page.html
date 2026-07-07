@@ -32,6 +32,18 @@
       </ion-badge>
     </section>
 
+    <section class="history recent-top">
+      <h2>{{ t('recentSpeech') }}</h2>
+      <ion-list *ngIf="transcript.length; else emptyTranscriptTop">
+        <ion-item *ngFor="let item of transcript; let first = first" [class.latest-caption]="first">
+          <ion-label>{{ item }}</ion-label>
+        </ion-item>
+      </ion-list>
+      <ng-template #emptyTranscriptTop>
+        <p class="muted">{{ t('emptyTranscript') }}</p>
+      </ng-template>
+    </section>
+
     <section class="live-caption" aria-live="polite">
       <p *ngIf="liveText; else quietState">{{ liveText }}</p>
       <ng-template #quietState>
@@ -125,17 +137,6 @@
 
     <ion-note color="danger" *ngIf="errorMessage">{{ errorMessage }}</ion-note>
 
-    <section class="history">
-      <h2>{{ t('recentSpeech') }}</h2>
-      <ion-list *ngIf="transcript.length; else emptyTranscript">
-        <ion-item *ngFor="let item of transcript">
-          <ion-label>{{ item }}</ion-label>
-        </ion-item>
-      </ion-list>
-      <ng-template #emptyTranscript>
-        <p class="muted">{{ t('emptyTranscript') }}</p>
-      </ng-template>
-    </section>
   </main>
 </ion-content>
 
