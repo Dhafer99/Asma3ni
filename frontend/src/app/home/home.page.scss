@@ -194,6 +194,16 @@ ion-list {
   color: #667085;
 }
 
+.app-credit {
+  display: grid;
+  gap: 4px;
+  padding: 8px 0 4px;
+  color: #667085;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
 @media (min-width: 760px) {
   .caption-shell {
     max-width: 820px;
