@@ -2,11 +2,13 @@
   <ion-toolbar>
     <ion-title>{{ t('appTitle') }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" [attr.aria-label]="t('settings')" (click)="settingsOpen = true">
+      <ion-button fill="clear" title="Settings" (click)="settingsOpen = true">
         <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+        <span class="sr-only">{{ t('settings') }}</span>
       </ion-button>
-      <ion-button fill="clear" [attr.aria-label]="t('clearTranscript')" (click)="clearTranscript()">
+      <ion-button fill="clear" title="Clear transcript" (click)="clearTranscript()">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        <span class="sr-only">{{ t('clearTranscript') }}</span>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

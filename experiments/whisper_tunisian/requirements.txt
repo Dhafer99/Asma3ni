@@ -1,0 +1,7 @@
+accelerate
+librosa
+numpy
+sounddevice
+soundfile
+torch
+transformers

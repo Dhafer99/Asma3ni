@@ -8,6 +8,7 @@ frontend/android/.gradle/
 frontend/android/local.properties
 
 backend/.venv/
+.venv-whisper/
 backend/__pycache__/
 backend/app/__pycache__/
 backend/models/
