@@ -95,6 +95,11 @@
   border: 1px solid #e4dfd1;
 }
 
+.live-caption.empty {
+  min-height: 88px;
+  padding: 12px;
+}
+
 .live-caption p {
   margin: 0;
   font-size: clamp(2.6rem, 11vw, 6rem);
@@ -103,12 +108,6 @@
   text-align: right;
   direction: auto;
   overflow-wrap: anywhere;
-}
-
-.live-caption p.muted {
-  font-size: clamp(1.5rem, 5vw, 2.4rem);
-  font-weight: 600;
-  line-height: 1.25;
 }
 
 .controls {

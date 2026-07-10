@@ -1,5 +1,6 @@
 import { Component, NgZone, OnDestroy } from '@angular/core';
 import { Capacitor, PluginListenerHandle } from '@capacitor/core';
+import { environment } from '../../environments/environment';
 import { NativeAsr, NativeCaptionEvent } from '../native-asr';
 
 const AUDIO_CHUNK_SIZE = 1024;
@@ -169,7 +170,7 @@ interface CaptionMessage {
   standalone: false,
 })
 export class HomePage implements OnDestroy {
-  websocketUrl = 'ws://localhost:8000/ws/transcribe';
+  websocketUrl = environment.asrWebsocketUrl;
   isNative = Capacitor.isNativePlatform();
   status: StreamStatus = 'idle';
   modelLoading = false;

@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  asrWebsocketUrl: 'wss://api.asma3ni.dhafersouid.com/ws/transcribe',
 };

@@ -46,11 +46,8 @@
       </ng-template>
     </section>
 
-    <section class="live-caption" aria-live="polite">
-      <p *ngIf="liveText; else quietState">{{ liveText }}</p>
-      <ng-template #quietState>
-        <p class="muted">{{ t('quiet') }}</p>
-      </ng-template>
+    <section class="live-caption" [class.empty]="!liveText" aria-live="polite">
+      <p *ngIf="liveText">{{ liveText }}</p>
     </section>
 
     <section class="controls">
