@@ -1,4 +1,4 @@
-# DeafApp
+# Asma3ni
 
 Prototype live-caption app for Tunisian Arabic speech.
 
@@ -238,7 +238,7 @@ Always-on listening from the notification bar is restricted by Android rules:
 
 - Android requires a foreground service with a persistent notification for continuous microphone access.
 - iOS is much more restrictive for continuous background microphone capture.
-- If Android kills the app because of battery optimization, disable battery optimization for DeafApp in system settings.
+- If Android kills the app because of battery optimization, disable battery optimization for Asma3ni in system settings.
 
 ## Microphone troubleshooting
 

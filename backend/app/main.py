@@ -12,7 +12,7 @@ MODEL_PATH = os.getenv("VOSK_MODEL_PATH", "./models/android-model")
 
 SetLogLevel(-1)
 
-app = FastAPI(title="DeafApp Tunisian ASR")
+app = FastAPI(title="Asma3ni Tunisian ASR")
 
 app.add_middleware(
     CORSMiddleware,

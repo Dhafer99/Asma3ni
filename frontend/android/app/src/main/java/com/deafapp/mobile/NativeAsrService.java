@@ -466,7 +466,7 @@ public class NativeAsrService extends Service implements RecognitionListener {
         if ("ar".equals(language)) {
             switch (key) {
                 case "title":
-                    return "DeafApp - النص المباشر";
+                    return "Asma3ni - النص المباشر";
                 case "preparing":
                     return "جاري تحضير النص...";
                 case "listening":
@@ -481,7 +481,7 @@ public class NativeAsrService extends Service implements RecognitionListener {
         if ("en".equals(language)) {
             switch (key) {
                 case "title":
-                    return "DeafApp captions";
+                    return "Asma3ni captions";
                 case "preparing":
                     return "Preparing captions...";
                 case "listening":
@@ -495,7 +495,7 @@ public class NativeAsrService extends Service implements RecognitionListener {
 
         switch (key) {
             case "title":
-                return "Sous-titres DeafApp";
+                return "Sous-titres Asma3ni";
             case "preparing":
                 return "Preparation des sous-titres...";
             case "listening":

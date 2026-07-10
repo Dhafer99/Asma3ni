@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">DeafApp</string>
-    <string name="title_activity_main">DeafApp</string>
+    <string name="app_name">Asma3ni</string>
+    <string name="title_activity_main">Asma3ni</string>
     <string name="package_name">com.deafapp.mobile</string>
     <string name="custom_url_scheme">com.deafapp.mobile</string>
 </resources>

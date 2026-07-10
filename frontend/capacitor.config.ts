@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.deafapp.mobile',
-  appName: 'DeafApp',
+  appName: 'Asma3ni',
   webDir: 'www'
 };
 

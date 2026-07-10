@@ -11,7 +11,7 @@ type AppLanguage = 'fr' | 'ar' | 'en';
 
 const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
   fr: {
-    appTitle: 'DeafApp',
+    appTitle: 'Asma3ni',
     eyebrow: 'Sous-titres en arabe tunisien',
     ready: 'Pret',
     connecting: 'Connexion...',
@@ -47,7 +47,7 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     unsupported: 'non supporte',
   },
   ar: {
-    appTitle: 'DeafApp',
+    appTitle: 'Asma3ni',
     eyebrow: 'نص مباشر بالدارجة التونسية',
     ready: 'جاهز',
     connecting: 'جاري الاتصال...',
@@ -83,7 +83,7 @@ const TRANSLATIONS: Record<AppLanguage, Record<string, string>> = {
     unsupported: 'غير مدعوم',
   },
   en: {
-    appTitle: 'DeafApp',
+    appTitle: 'Asma3ni',
     eyebrow: 'Tunisian Arabic live captions',
     ready: 'Ready',
     connecting: 'Connecting...',

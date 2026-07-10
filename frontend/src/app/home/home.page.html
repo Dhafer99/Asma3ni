@@ -1,6 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ t('appTitle') }}</ion-title>
+    <ion-title>
+      <span class="brand-title">{{ t('appTitle') }}</span>
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" title="Settings" (click)="settingsOpen = true">
         <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
@@ -25,17 +27,23 @@
     </section>
 
     <section class="status-band" [class.listening]="status === 'listening'" [class.error]="status === 'error'">
-      <div>
+      <div class="status-copy">
         <p class="eyebrow">{{ t('eyebrow') }}</p>
         <h1>{{ statusText() }}</h1>
       </div>
-      <ion-badge [color]="status === 'listening' ? 'success' : status === 'error' ? 'danger' : 'medium'">
-        {{ statusBadgeText() }}
-      </ion-badge>
+      <div class="status-meta">
+        <span class="status-dot" aria-hidden="true"></span>
+        <ion-badge [color]="status === 'listening' ? 'success' : status === 'error' ? 'danger' : 'medium'">
+          {{ statusBadgeText() }}
+        </ion-badge>
+      </div>
     </section>
 
     <section class="history recent-top">
-      <h2>{{ t('recentSpeech') }}</h2>
+      <div class="history-heading">
+        <h2>{{ t('recentSpeech') }}</h2>
+        <span class="caption-count" *ngIf="transcript.length">{{ transcript.length }}</span>
+      </div>
       <ion-list *ngIf="transcript.length; else emptyTranscriptTop">
         <ion-item *ngFor="let item of transcript; let first = first" [class.latest-caption]="first">
           <ion-label>{{ item }}</ion-label>

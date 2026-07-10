@@ -1,4 +1,4 @@
-# DeafApp Backend
+# Asma3ni Backend
 
 FastAPI service that receives 16 kHz mono PCM audio over WebSocket and returns Tunisian Arabic captions from the LinTO Vosk model.
 
