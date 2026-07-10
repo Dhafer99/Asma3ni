@@ -2,6 +2,13 @@
   --ion-color-primary: #0f766e;
   --ion-color-primary-rgb: 15, 118, 110;
   --ion-color-primary-contrast: #ffffff;
+  color: #101828;
+  color-scheme: light;
+}
+
+ion-content {
+  --background: #f3f6f9;
+  --color: #101828;
 }
 
 ion-toolbar {
@@ -244,6 +251,34 @@ ion-list {
 .settings-panel ion-item,
 .server-input {
   --background: #ffffff;
+  --background-hover: #f8fafc;
+  --color: #101828;
+  --highlight-color-focused: #0f766e;
+  color: #101828;
+}
+
+.settings-panel ion-icon,
+.server-input ion-icon {
+  color: #496275;
+}
+
+.settings-panel ion-select,
+.settings-panel ion-toggle,
+.settings-panel ion-range,
+.settings-panel ion-label,
+.server-input ion-select,
+.server-input ion-input {
+  --color: #101828;
+  --placeholder-color: #667085;
+  color: #101828;
+}
+
+.settings-panel ion-range {
+  --bar-background: #d9e2ec;
+  --bar-background-active: #0f766e;
+  --knob-background: #0f766e;
+  --pin-background: #0f766e;
+  --pin-color: #ffffff;
 }
 
 .settings-modal {
@@ -254,6 +289,12 @@ ion-list {
 .settings-modal ion-list {
   border: 1px solid #dbe3ec;
   background: #ffffff;
+}
+
+.settings-modal ion-item {
+  --background: #ffffff;
+  --color: #101828;
+  color: #101828;
 }
 
 .server-input {
